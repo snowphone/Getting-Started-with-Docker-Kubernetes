@@ -10,3 +10,21 @@ configmap을 생성하는 명령어는 `kubectl create configmap <configmap name
 * `kubectl create configmap start-k8s --from-literal k8s=kubernetes --from-literal container=docker`
 
 생성된 configmap은 `kubectl get configmap` 혹은 `kubectl get configmap -o yaml`을 통해 확인할 수 있다.
+
+* configmap은 1) 환경변수로 등록해서 사용하거나, 2) 파일의 형태로 마운트해서 사용할 수 있다.
+    * 구체적인 예시는 ./all-env-from-configmap.yaml, ./volume-mount-configmap.yaml 확인하기
+
+
+`--from-literal`이라는 옵션을 사용해도 되지만, 사실 dotenv를 직접 넘기는게 더 편할 수도 있다:
+
+```env
+k8s=kubernetes
+container=docker
+```
+`kubectl create configmap from-envfile --from-env-file ./envfile.env`
+
+volume mount기능을 이용하면 간단한 파일을 넘기는 것도 가능하다!
+
+
+`kubectl create configmap index-file --from-file ./index.html` 이라고 작성할 시 key: `index.html`, value: `$(cat index.html)`이 된다.
+

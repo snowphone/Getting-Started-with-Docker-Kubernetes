@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: container-volume-pod
+spec:
+  containers:
+    - name: my-container
+      image: busybox
+      args: ['tail', '-f', '/dev/null']
+      volumeMounts:
+        - name: configmap-volume
+          mountPath: /etc/config
+
+        - name: configmap-volume-tailored
+          mountPath: /etc/tailored-config
+
+        - name: configmap-index-html
+          mountPath: /etc/index
+
+  volumes:
+    - name: configmap-volume
+      configMap:
+        name: start-k8s  # /etc/config 폴더 안에 파일명 k8s: 내용물 kubernetes, 파일명 container: 내용물 docker 로 두 파일 생성됨
+    - name: configmap-index-html
+      configMap:
+        name: index-file  # /etc/index/index.html: html 파일 있음
+
+    - name: configmap-volume-tailored
+      configMap:
+        name: start-k8s  # /etc/config 폴더 안에 파일명 k8s: 내용물 kubernetes, 파일명 container: 내용물 docker 로 두 파일 생성됨
+        items:
+          - key: k8s
+            path: k8s_fullname  # /etc/tailored-config/k8s_fullname: 내용물은 kubernetes
+
